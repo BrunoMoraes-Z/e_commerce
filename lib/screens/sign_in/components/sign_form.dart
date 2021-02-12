@@ -14,7 +14,7 @@ class SignForm extends StatefulWidget {
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  String email, password;
+  String email = '', password = '';
   bool remember = false;
   final List<String> errors = [];
 
@@ -42,12 +42,11 @@ class _SignFormState extends State<SignForm> {
               Text('Remember me'),
               Spacer(),
               GestureDetector(
-                onTap: () => Navigator.popAndPushNamed(context, ForgotPasswordScreen.routeName),
+                onTap: () => Navigator.popAndPushNamed(
+                    context, ForgotPasswordScreen.routeName),
                 child: Text(
                   'Forgot Password',
-                  style: TextStyle(
-                      decoration: TextDecoration.underline
-                  ),
+                  style: TextStyle(decoration: TextDecoration.underline),
                 ),
               )
             ],
@@ -58,9 +57,11 @@ class _SignFormState extends State<SignForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                if (errors.length == 0) {
+                  _formKey.currentState.save();
+                  // if all are valid then go to success screen
+                  Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                }
               }
             },
           )
@@ -74,34 +75,49 @@ class _SignFormState extends State<SignForm> {
       obscureText: true,
       onSaved: (newValue) => password = newValue,
       onChanged: (value) {
-        if (value.isNotEmpty && errors.contains(kPassNullError)) {
-          setState(() {
-            errors.remove(kPassNullError);
-          });
-          return '';
-        } else if (value.length > 5 && errors.contains(kShortPassError)) {
-          setState(() {
-            errors.remove(kShortPassError);
-          });
-          return '';
+        if (value.isNotEmpty) {
+          if (errors.contains(kPassNullError)) {
+            setState(() => errors.remove(kPassNullError));
+          }
+          if (value.length > 5) {
+            setState(() => errors.remove(kShortPassError));
+          } else {
+            if (!errors.contains(kShortPassError)) {
+              setState(() => errors.add(kShortPassError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kPassNullError)) {
+            setState(() => errors.add(kPassNullError));
+            return '';
+          }
         }
         return null;
       },
       validator: (value) {
-        if (value.isEmpty && !errors.contains(kPassNullError)) {
-          setState(() {
-            errors.add(kPassNullError);
-          });
-          return '';
-        } else if (value.length < 6 && !errors.contains(kShortPassError)) {
-          setState(() {
-            errors.add(kShortPassError);
-          });
-          return '';
+        if (value.isNotEmpty) {
+          if (errors.contains(kPassNullError)) {
+            setState(() => errors.remove(kPassNullError));
+          }
+          if (value.length > 5) {
+            setState(() => errors.remove(kShortPassError));
+          } else {
+            if (!errors.contains(kShortPassError)) {
+              setState(() => errors.add(kShortPassError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kPassNullError)) {
+            setState(() => errors.add(kPassNullError));
+            return '';
+          }
         }
         return null;
       },
       decoration: InputDecoration(
+          errorStyle: TextStyle(height: 0),
           labelText: 'Password',
           hintText: 'Enter your password',
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -116,32 +132,49 @@ class _SignFormState extends State<SignForm> {
       keyboardType: TextInputType.emailAddress,
       onSaved: (newValue) => email = newValue,
       onChanged: (value) {
-        if (value.isNotEmpty && errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.remove(kEmailNullError);
-          });
-        } else if (emailValidatorRegExp.hasMatch(value) &&
-            errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.remove(kInvalidEmailError);
-          });
+        if (value.isNotEmpty) {
+          if (errors.contains(kEmailNullError)) {
+            setState(() => errors.remove(kEmailNullError));
+          }
+          if (emailValidatorRegExp.hasMatch(value)) {
+            setState(() => errors.remove(kInvalidEmailError));
+          } else {
+            if (!errors.contains(kInvalidEmailError)) {
+              setState(() => errors.add(kInvalidEmailError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kEmailNullError)) {
+            setState(() => errors.add(kEmailNullError));
+            return '';
+          }
         }
         return null;
       },
       validator: (value) {
-        if (value.isEmpty && !errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.add(kEmailNullError);
-          });
-        } else if (!emailValidatorRegExp.hasMatch(value) &&
-            !errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.add(kInvalidEmailError);
-          });
+        if (value.isNotEmpty) {
+          if (errors.contains(kEmailNullError)) {
+            setState(() => errors.remove(kEmailNullError));
+          }
+          if (emailValidatorRegExp.hasMatch(value)) {
+            setState(() => errors.remove(kInvalidEmailError));
+          } else {
+            if (!errors.contains(kInvalidEmailError)) {
+              setState(() => errors.add(kInvalidEmailError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kEmailNullError)) {
+            setState(() => errors.add(kEmailNullError));
+            return '';
+          }
         }
         return null;
       },
       decoration: InputDecoration(
+          errorStyle: TextStyle(height: 0),
           labelText: 'Email',
           hintText: 'Enter your email',
           floatingLabelBehavior: FloatingLabelBehavior.always,
