@@ -70,9 +70,68 @@ class _SignFormState extends State<SignForm> {
     );
   }
 
+  TextFormField buildEmailFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onSaved: (newValue) => email = newValue,
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          if (errors.contains(kEmailNullError)) {
+            setState(() => errors.remove(kEmailNullError));
+          }
+          if (emailValidatorRegExp.hasMatch(value)) {
+            setState(() => errors.remove(kInvalidEmailError));
+          } else {
+            if (!errors.contains(kInvalidEmailError)) {
+              setState(() => errors.add(kInvalidEmailError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kEmailNullError)) {
+            setState(() => errors.add(kEmailNullError));
+            return '';
+          }
+        }
+        return null;
+      },
+      validator: (value) {
+        if (value.isNotEmpty) {
+          if (errors.contains(kEmailNullError)) {
+            setState(() => errors.remove(kEmailNullError));
+          }
+          if (emailValidatorRegExp.hasMatch(value)) {
+            setState(() => errors.remove(kInvalidEmailError));
+          } else {
+            if (!errors.contains(kInvalidEmailError)) {
+              setState(() => errors.add(kInvalidEmailError));
+              return '';
+            }
+          }
+        } else {
+          if (!errors.contains(kEmailNullError)) {
+            setState(() => errors.add(kEmailNullError));
+            return '';
+          }
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+          errorStyle: TextStyle(height: 0),
+          labelText: 'Email',
+          hintText: 'Enter your email',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: CustomSuffixIcon(
+            svgIcon: 'assets/icons/Mail.svg',
+          )),
+    );
+  }
+
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
+      textInputAction: TextInputAction.done,
       onSaved: (newValue) => password = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -127,60 +186,4 @@ class _SignFormState extends State<SignForm> {
     );
   }
 
-  TextFormField buildEmailFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          if (errors.contains(kEmailNullError)) {
-            setState(() => errors.remove(kEmailNullError));
-          }
-          if (emailValidatorRegExp.hasMatch(value)) {
-            setState(() => errors.remove(kInvalidEmailError));
-          } else {
-            if (!errors.contains(kInvalidEmailError)) {
-              setState(() => errors.add(kInvalidEmailError));
-              return '';
-            }
-          }
-        } else {
-          if (!errors.contains(kEmailNullError)) {
-            setState(() => errors.add(kEmailNullError));
-            return '';
-          }
-        }
-        return null;
-      },
-      validator: (value) {
-        if (value.isNotEmpty) {
-          if (errors.contains(kEmailNullError)) {
-            setState(() => errors.remove(kEmailNullError));
-          }
-          if (emailValidatorRegExp.hasMatch(value)) {
-            setState(() => errors.remove(kInvalidEmailError));
-          } else {
-            if (!errors.contains(kInvalidEmailError)) {
-              setState(() => errors.add(kInvalidEmailError));
-              return '';
-            }
-          }
-        } else {
-          if (!errors.contains(kEmailNullError)) {
-            setState(() => errors.add(kEmailNullError));
-            return '';
-          }
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-          errorStyle: TextStyle(height: 0),
-          labelText: 'Email',
-          hintText: 'Enter your email',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          suffixIcon: CustomSuffixIcon(
-            svgIcon: 'assets/icons/Mail.svg',
-          )),
-    );
-  }
 }
