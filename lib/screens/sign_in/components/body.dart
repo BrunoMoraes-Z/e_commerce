@@ -1,7 +1,5 @@
 import 'package:e_commerce/components/no_account_text.dart';
 import 'package:e_commerce/components/social_card.dart';
-import 'package:e_commerce/screens/forgot_password/forgot_password.dart';
-import 'package:e_commerce/utils/constants.dart';
 import 'package:e_commerce/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -10,14 +8,14 @@ import 'sign_form.dart';
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding:
+            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
             child: SingleChildScrollView(
               child: Column(
                 children: [

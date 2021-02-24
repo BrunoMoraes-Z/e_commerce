@@ -18,10 +18,7 @@ class CustomSuffixIcon extends StatelessWidget {
         getProportionateScreenWidth(20),
         getProportionateScreenWidth(20),
       ),
-      child: SvgPicture.asset(
-        svgIcon,
-        height: getProportionateScreenWidth(18),
-      ),
+      child: SvgPicture.asset(svgIcon, height: getProportionateScreenWidth(18)),
     );
   }
 }
