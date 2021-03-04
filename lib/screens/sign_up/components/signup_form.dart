@@ -4,6 +4,7 @@ import 'package:e_commerce/components/form_error.dart';
 import 'package:e_commerce/screens/complete_profile/complete_profile.dart';
 import 'package:e_commerce/utils/constants.dart';
 import 'package:e_commerce/utils/size_config.dart';
+import 'package:e_commerce/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -42,10 +43,12 @@ class _SignUpFormState extends State<SignUpForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
-                setState(() {
-                  errors.clear();
-                });
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                print(password);
+                print(confirm_password);
+                // setState(() {
+                //   errors.clear();
+                // });
+                // Navigator.pushNamed(context, CompleteProfileScreen.routeName);
               }
             },
           )
@@ -59,23 +62,23 @@ class _SignUpFormState extends State<SignUpForm> {
       obscureText: true,
       textInputAction: TextInputAction.done,
       onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.isNotEmpty && password == confirm_password) {
-          removeError(error: kMatchPassError);
-        }
-        confirm_password = value;
+
+      onChanged: (value) => {
+        confirm_password = value,
+        Validator(
+          validation: value.isNotEmpty && password == confirm_password,
+          success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
+          fail: () => value.isEmpty ? addError(error: kPassNullError) : {removeError(error: kPassNullError), addError(error: kMatchPassError)},
+        )
       },
+
       validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if (password != value) {
-          addError(error: kMatchPassError);
-          return "";
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && password == confirm_password,
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty ? addError(error: kPassNullError) : addError(error: kMatchPassError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),
@@ -86,6 +89,39 @@ class _SignUpFormState extends State<SignUpForm> {
       ),
     );
   }
+
+  // TextFormField buildConfPasswordFormField() {
+  //   return TextFormField(
+  //     obscureText: true,
+  //     textInputAction: TextInputAction.done,
+  //     onSaved: (newValue) => password = newValue,
+  //     onChanged: (value) {
+  //       if (value.isNotEmpty) {
+  //         removeError(error: kPassNullError);
+  //       } else if (value.isNotEmpty && password == confirm_password) {
+  //         removeError(error: kMatchPassError);
+  //       }
+  //       confirm_password = value;
+  //     },
+  //     validator: (value) {
+  //       if (value.isEmpty) {
+  //         addError(error: kPassNullError);
+  //         return "";
+  //       } else if (password != value) {
+  //         addError(error: kMatchPassError);
+  //         return "";
+  //       }
+  //       return null;
+  //     },
+  //     decoration: InputDecoration(
+  //       errorStyle: TextStyle(height: 0),
+  //       labelText: 'Confirm Password',
+  //       hintText: 'Re-enter your password',
+  //       floatingLabelBehavior: FloatingLabelBehavior.always,
+  //       suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Lock.svg'),
+  //     ),
+  //   );
+  // }
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
