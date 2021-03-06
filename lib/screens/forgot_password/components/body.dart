@@ -4,6 +4,7 @@ import 'package:e_commerce/components/form_error.dart';
 import 'package:e_commerce/components/no_account_text.dart';
 import 'package:e_commerce/utils/constants.dart';
 import 'package:e_commerce/utils/size_config.dart';
+import 'package:e_commerce/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -16,8 +17,7 @@ class Body extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: getProportionateScreenWidth(20)
-            ),
+                horizontal: getProportionateScreenWidth(20)),
             child: Column(
               children: [
                 SizedBox(height: SizeConfig.screenHeight * 0.1),
@@ -53,6 +53,14 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
   final List<String> errors = [];
   String email;
 
+  void addError({String error}) {
+    if (!errors.contains(error)) setState(() => errors.add(error));
+  }
+
+  void removeError({String error}) {
+    if (errors.contains(error)) setState(() => errors.remove(error));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -60,9 +68,13 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(
+              height: getProportionateScreenHeight(30)),
           FormError(errors: errors),
-          SizedBox(height: SizeConfig.screenHeight * 0.1),
+          SizedBox(
+              height: errors.length == 0
+                  ? SizeConfig.screenHeight * 0.1
+                  : SizeConfig.screenHeight * 0.075),
           DefaultButton(
             text: 'Continue',
             press: () {
@@ -82,37 +94,37 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty && errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.remove(kEmailNullError);
-          });
-          return '';
-        } else if (emailValidatorRegExp.hasMatch(value) &&
-            errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.remove(kInvalidEmailError);
-          });
-          return '';
-        }
-        return null;
+      onChanged: (value) => {
+        email = value,
+        Validator(
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? {
+                  removeError(error: kInvalidEmailError),
+                  addError(error: kEmailNullError)
+                }
+              : {
+                  removeError(error: kEmailNullError),
+                  addError(error: kInvalidEmailError)
+                },
+        ),
       },
       validator: (value) {
-        if (value.isEmpty && !errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.add(kEmailNullError);
-          });
-          return '';
-        } else if (!emailValidatorRegExp.hasMatch(value) &&
-            !errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.add(kInvalidEmailError);
-          });
-          return '';
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty
+              ? addError(error: kEmailNullError)
+              : addError(error: kInvalidEmailError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
+        errorStyle: TextStyle(height: 0),
         labelText: 'Email',
         hintText: 'Enter your email',
         floatingLabelBehavior: FloatingLabelBehavior.always,

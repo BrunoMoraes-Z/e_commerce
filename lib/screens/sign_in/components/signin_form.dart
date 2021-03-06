@@ -5,6 +5,7 @@ import 'package:e_commerce/screens/forgot_password/forgot_password.dart';
 import 'package:e_commerce/screens/login_success/login_success.dart';
 import 'package:e_commerce/utils/constants.dart';
 import 'package:e_commerce/utils/size_config.dart';
+import 'package:e_commerce/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class SignForm extends StatefulWidget {
@@ -48,8 +49,7 @@ class _SignFormState extends State<SignForm> {
               Text('Remember me'),
               Spacer(),
               GestureDetector(
-                onTap: () => Navigator.popAndPushNamed(
-                    context, ForgotPasswordScreen.routeName),
+                onTap: () => Navigator.pushNamed(context, ForgotPasswordScreen.routeName),
                 child: Text(
                   'Forgot Password',
                   style: TextStyle(decoration: TextDecoration.underline),
@@ -81,23 +81,31 @@ class _SignFormState extends State<SignForm> {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
-        return null;
+      onChanged: (value) => {
+        email = value,
+        Validator(
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? addError(error: kEmailNullError)
+              : {
+            removeError(error: kEmailNullError),
+            addError(error: kInvalidEmailError)
+          },
+        ),
       },
       validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kEmailNullError);
-          return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return "";
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty
+              ? addError(error: kEmailNullError)
+              : addError(error: kInvalidEmailError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),
@@ -114,23 +122,31 @@ class _SignFormState extends State<SignForm> {
       obscureText: true,
       textInputAction: TextInputAction.done,
       onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          removeError(error: kShortPassError);
-        }
-        password = value;
+      onChanged: (value) => {
+        password = value,
+        Validator(
+          validation: value.isNotEmpty && value.length > 7,
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : {
+            removeError(error: kPassNullError),
+            addError(error: kShortPassError)
+          },
+        ),
       },
       validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return "";
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && value.length > 7,
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : addError(error: kShortPassError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),

@@ -3,7 +3,7 @@ import 'package:e_commerce/components/social_card.dart';
 import 'package:e_commerce/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
-import 'sign_form.dart';
+import 'signin_form.dart';
 
 class Body extends StatelessWidget {
   @override

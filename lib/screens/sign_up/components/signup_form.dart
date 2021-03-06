@@ -43,12 +43,7 @@ class _SignUpFormState extends State<SignUpForm> {
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
-                print(password);
-                print(confirm_password);
-                // setState(() {
-                //   errors.clear();
-                // });
-                // Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
               }
             },
           )
@@ -57,94 +52,77 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  TextFormField buildConfPasswordFormField() {
+  TextFormField buildEmailFormField() {
     return TextFormField(
-      obscureText: true,
-      textInputAction: TextInputAction.done,
-      onSaved: (newValue) => password = newValue,
-
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onSaved: (newValue) => email = newValue,
       onChanged: (value) => {
-        confirm_password = value,
+        email = value,
         Validator(
-          validation: value.isNotEmpty && password == confirm_password,
-          success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
-          fail: () => value.isEmpty ? addError(error: kPassNullError) : {removeError(error: kPassNullError), addError(error: kMatchPassError)},
-        )
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? addError(error: kEmailNullError)
+              : {
+                  removeError(error: kEmailNullError),
+                  addError(error: kInvalidEmailError)
+                },
+        ),
       },
-
       validator: (value) {
         Validator(
-          validation: value.isNotEmpty && password == confirm_password,
+          validation: value.isNotEmpty && emailValidatorRegExp.hasMatch(value),
           success: () => setState(() => errors.clear()),
-          fail: () => value.isEmpty ? addError(error: kPassNullError) : addError(error: kMatchPassError),
+          fail: () => value.isEmpty
+              ? addError(error: kEmailNullError)
+              : addError(error: kInvalidEmailError),
         );
         return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),
-        labelText: 'Confirm Password',
-        hintText: 'Re-enter your password',
+        labelText: 'Email',
+        hintText: 'Enter your email',
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Lock.svg'),
+        suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Mail.svg'),
       ),
     );
   }
 
-  // TextFormField buildConfPasswordFormField() {
-  //   return TextFormField(
-  //     obscureText: true,
-  //     textInputAction: TextInputAction.done,
-  //     onSaved: (newValue) => password = newValue,
-  //     onChanged: (value) {
-  //       if (value.isNotEmpty) {
-  //         removeError(error: kPassNullError);
-  //       } else if (value.isNotEmpty && password == confirm_password) {
-  //         removeError(error: kMatchPassError);
-  //       }
-  //       confirm_password = value;
-  //     },
-  //     validator: (value) {
-  //       if (value.isEmpty) {
-  //         addError(error: kPassNullError);
-  //         return "";
-  //       } else if (password != value) {
-  //         addError(error: kMatchPassError);
-  //         return "";
-  //       }
-  //       return null;
-  //     },
-  //     decoration: InputDecoration(
-  //       errorStyle: TextStyle(height: 0),
-  //       labelText: 'Confirm Password',
-  //       hintText: 'Re-enter your password',
-  //       floatingLabelBehavior: FloatingLabelBehavior.always,
-  //       suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Lock.svg'),
-  //     ),
-  //   );
-  // }
-
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      textInputAction: TextInputAction.done,
+      textInputAction: TextInputAction.next,
       onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          removeError(error: kShortPassError);
-        }
-        password = value;
+      onChanged: (value) => {
+        password = value,
+        Validator(
+          validation: value.isNotEmpty && value.length > 7,
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : {
+                  removeError(error: kPassNullError),
+                  addError(error: kShortPassError)
+                },
+        ),
       },
       validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return "";
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && value.length > 7,
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : addError(error: kShortPassError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),
@@ -156,35 +134,43 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  TextFormField buildEmailFormField() {
+  TextFormField buildConfPasswordFormField() {
     return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.next,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
-        return null;
+      obscureText: true,
+      textInputAction: TextInputAction.done,
+      onSaved: (newValue) => password = newValue,
+      onChanged: (value) => {
+        confirm_password = value,
+        Validator(
+          validation: value.isNotEmpty && password == confirm_password,
+          success: () => {
+            setState(() => errors.clear()),
+            _formKey.currentState.validate()
+          },
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : {
+                  removeError(error: kPassNullError),
+                  addError(error: kMatchPassError)
+                },
+        )
       },
       validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kEmailNullError);
-          return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return "";
-        }
-        return null;
+        Validator(
+          validation: value.isNotEmpty && password == confirm_password,
+          success: () => setState(() => errors.clear()),
+          fail: () => value.isEmpty
+              ? addError(error: kPassNullError)
+              : addError(error: kMatchPassError),
+        );
+        return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
         errorStyle: TextStyle(height: 0),
-        labelText: 'Email',
-        hintText: 'Enter your email',
+        labelText: 'Confirm Password',
+        hintText: 'Re-enter your password',
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Mail.svg'),
+        suffixIcon: CustomSuffixIcon(svgIcon: 'assets/icons/Lock.svg'),
       ),
     );
   }
