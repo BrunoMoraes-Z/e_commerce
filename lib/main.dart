@@ -7,13 +7,13 @@ void main() {
   runApp(MyApp());
 }
 
-//https://www.youtube.com/watch?v=EED7eWhXoc8
+//https://www.youtube.com/watch?v=sr0v1cfloJc
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
       theme: theme(),
       initialRoute: SplashScreen.routeName,
       routes: routes,
