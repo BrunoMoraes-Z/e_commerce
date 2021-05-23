@@ -4,9 +4,9 @@ import 'package:e_commerce/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class OtpForm extends StatefulWidget {
-
   const OtpForm({
-    Key key, this.isValid,
+    Key key,
+    this.isValid,
   }) : super(key: key);
   final bool isValid;
 
@@ -50,6 +50,7 @@ class _OtpFormState extends State<OtpForm> {
               SizedBox(
                 width: getProportionateScreenWidth(60),
                 child: TextFormField(
+                  key: ValueKey('input_code_1'),
                   autofocus: true,
                   obscureText: true,
                   keyboardType: TextInputType.number,
@@ -64,6 +65,7 @@ class _OtpFormState extends State<OtpForm> {
               SizedBox(
                 width: getProportionateScreenWidth(60),
                 child: TextFormField(
+                  key: ValueKey('input_code_2'),
                   focusNode: pin2FocusNode,
                   obscureText: true,
                   keyboardType: TextInputType.number,
@@ -78,6 +80,7 @@ class _OtpFormState extends State<OtpForm> {
               SizedBox(
                 width: getProportionateScreenWidth(60),
                 child: TextFormField(
+                  key: ValueKey('input_code_3'),
                   focusNode: pin3FocusNode,
                   obscureText: true,
                   keyboardType: TextInputType.number,
@@ -92,6 +95,7 @@ class _OtpFormState extends State<OtpForm> {
               SizedBox(
                 width: getProportionateScreenWidth(60),
                 child: TextFormField(
+                  key: ValueKey('input_code_4'),
                   focusNode: pin4FocusNode,
                   obscureText: true,
                   keyboardType: TextInputType.number,
@@ -107,6 +111,7 @@ class _OtpFormState extends State<OtpForm> {
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.15),
           DefaultButton(
+            key: ValueKey('btn_continue'),
             text: 'Continue',
             press: () => widget.isValid ? {} : null,
           )

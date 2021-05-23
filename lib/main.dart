@@ -2,8 +2,10 @@ import 'package:e_commerce/screens/splash/splash.dart';
 import 'package:e_commerce/utils/routes.dart';
 import 'package:e_commerce/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_driver/driver_extension.dart';
 
 void main() {
+  enableFlutterDriverExtension();
   runApp(MyApp());
 }
 

@@ -50,6 +50,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
+            key: ValueKey('btn_continue'),
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
@@ -64,22 +65,25 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildFirstNameFormField() {
     return TextFormField(
+      key: ValueKey('input_first_name'),
       textInputAction: TextInputAction.next,
       onSaved: (newValue) => firstName = newValue,
       onChanged: (value) => {
         firstName = value,
         Validator(
-          validation: firstName.isNotEmpty,
-          success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
-          fail: () => value.isEmpty ? addError(error: kNamelNullError) : null
-        )
+            validation: firstName.isNotEmpty,
+            success: () => {
+                  setState(() => errors.clear()),
+                  _formKey.currentState.validate()
+                },
+            fail: () => value.isEmpty ? addError(error: kNamelNullError) : null)
       },
       validator: (value) {
         Validator(
             validation: firstName.isNotEmpty,
             success: () => setState(() => errors.clear()),
-            fail: () => value.isEmpty ? addError(error: kNamelNullError) : null
-        );
+            fail: () =>
+                value.isEmpty ? addError(error: kNamelNullError) : null);
         return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
@@ -94,22 +98,25 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildLastNameFormField() {
     return TextFormField(
+      key: ValueKey('input_last_name'),
       textInputAction: TextInputAction.next,
       onSaved: (newValue) => lastName = newValue,
       onChanged: (value) => {
         lastName = value,
         Validator(
             validation: lastName.isNotEmpty,
-            success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
-            fail: () => value.isEmpty ? addError(error: kNamelNullError) : null
-        )
+            success: () => {
+                  setState(() => errors.clear()),
+                  _formKey.currentState.validate()
+                },
+            fail: () => value.isEmpty ? addError(error: kNamelNullError) : null)
       },
       validator: (value) {
         Validator(
             validation: lastName.isNotEmpty,
             success: () => setState(() => errors.clear()),
-            fail: () => value.isEmpty ? addError(error: kNamelNullError) : null
-        );
+            fail: () =>
+                value.isEmpty ? addError(error: kNamelNullError) : null);
         return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
@@ -124,6 +131,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPhoneNumberFormField() {
     return TextFormField(
+      key: ValueKey('input_phone'),
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,
       onSaved: (newValue) => phone = newValue,
@@ -131,16 +139,19 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         phone = value,
         Validator(
             validation: phone.isNotEmpty,
-            success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
-            fail: () => value.isEmpty ? addError(error: kPhoneNumberNullError) : null
-        )
+            success: () => {
+                  setState(() => errors.clear()),
+                  _formKey.currentState.validate()
+                },
+            fail: () =>
+                value.isEmpty ? addError(error: kPhoneNumberNullError) : null)
       },
       validator: (value) {
         Validator(
             validation: phone.isNotEmpty,
             success: () => setState(() => errors.clear()),
-            fail: () => value.isEmpty ? addError(error: kPhoneNumberNullError) : null
-        );
+            fail: () =>
+                value.isEmpty ? addError(error: kPhoneNumberNullError) : null);
         return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(
@@ -155,22 +166,26 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildAddressFormField() {
     return TextFormField(
+      key: ValueKey('input_address'),
       textInputAction: TextInputAction.done,
       onSaved: (newValue) => address = newValue,
       onChanged: (value) => {
         address = value,
         Validator(
             validation: address.isNotEmpty,
-            success: () => {setState(() => errors.clear()), _formKey.currentState.validate()},
-            fail: () => value.isEmpty ? addError(error: kAddressNullError) : null
-        )
+            success: () => {
+                  setState(() => errors.clear()),
+                  _formKey.currentState.validate()
+                },
+            fail: () =>
+                value.isEmpty ? addError(error: kAddressNullError) : null)
       },
       validator: (value) {
         Validator(
             validation: address.isNotEmpty,
             success: () => setState(() => errors.clear()),
-            fail: () => value.isEmpty ? addError(error: kAddressNullError) : null
-        );
+            fail: () =>
+                value.isEmpty ? addError(error: kAddressNullError) : null);
         return errors.length > 0 ? '' : null;
       },
       decoration: InputDecoration(

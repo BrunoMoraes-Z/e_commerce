@@ -10,7 +10,6 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
   bool valid = true;
 
   @override
@@ -33,6 +32,7 @@ class _BodyState extends State<Body> {
                 OtpForm(isValid: valid),
                 SizedBox(height: SizeConfig.screenHeight * 0.1),
                 GestureDetector(
+                  key: ValueKey('btn_resend'),
                   onTap: () {
                     //resend the code
                   },
@@ -71,5 +71,3 @@ class _BodyState extends State<Body> {
     );
   }
 }
-
-

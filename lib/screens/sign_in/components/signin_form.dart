@@ -40,16 +40,22 @@ class _SignFormState extends State<SignForm> {
           Row(
             children: [
               Checkbox(
+                key: ValueKey('ckb_remember'),
                 value: remember,
                 activeColor: kPrimaryColor,
                 onChanged: (value) {
                   setState(() => remember = value);
                 },
               ),
-              Text('Remember me'),
+              Text(
+                'Remember me',
+                key: ValueKey('lbl_remember'),
+              ),
               Spacer(),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, ForgotPasswordScreen.routeName),
+                key: ValueKey('btn_forgot'),
+                onTap: () => Navigator.pushNamed(
+                    context, ForgotPasswordScreen.routeName),
                 child: Text(
                   'Forgot Password',
                   style: TextStyle(decoration: TextDecoration.underline),
@@ -60,6 +66,7 @@ class _SignFormState extends State<SignForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
+            key: ValueKey('btn_continue'),
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
@@ -78,6 +85,7 @@ class _SignFormState extends State<SignForm> {
 
   TextFormField buildEmailFormField() {
     return TextFormField(
+      key: ValueKey('input_email'),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onSaved: (newValue) => email = newValue,
@@ -92,9 +100,9 @@ class _SignFormState extends State<SignForm> {
           fail: () => value.isEmpty
               ? addError(error: kEmailNullError)
               : {
-            removeError(error: kEmailNullError),
-            addError(error: kInvalidEmailError)
-          },
+                  removeError(error: kEmailNullError),
+                  addError(error: kInvalidEmailError)
+                },
         ),
       },
       validator: (value) {
@@ -119,6 +127,7 @@ class _SignFormState extends State<SignForm> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
+      key: ValueKey('input_password'),
       obscureText: true,
       textInputAction: TextInputAction.done,
       onSaved: (newValue) => password = newValue,
@@ -133,9 +142,9 @@ class _SignFormState extends State<SignForm> {
           fail: () => value.isEmpty
               ? addError(error: kPassNullError)
               : {
-            removeError(error: kPassNullError),
-            addError(error: kShortPassError)
-          },
+                  removeError(error: kPassNullError),
+                  addError(error: kShortPassError)
+                },
         ),
       },
       validator: (value) {

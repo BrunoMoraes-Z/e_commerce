@@ -68,14 +68,14 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(
-              height: getProportionateScreenHeight(30)),
+          SizedBox(height: getProportionateScreenHeight(30)),
           FormError(errors: errors),
           SizedBox(
               height: errors.length == 0
                   ? SizeConfig.screenHeight * 0.1
                   : SizeConfig.screenHeight * 0.075),
           DefaultButton(
+            key: ValueKey('btn_continue'),
             text: 'Continue',
             press: () {
               if (_formKey.currentState.validate()) {
@@ -92,6 +92,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
 
   TextFormField buildEmailFormField() {
     return TextFormField(
+      key: ValueKey('input_email'),
       keyboardType: TextInputType.emailAddress,
       onSaved: (newValue) => email = newValue,
       onChanged: (value) => {
